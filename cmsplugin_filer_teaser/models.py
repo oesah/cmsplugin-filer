@@ -3,12 +3,10 @@ from django.db import models
 from cms.models import CMSPlugin
 from cms.models.fields import PageField
 from filer.fields.image import FilerImageField
-from filer.utils.compatibility import python_2_unicode_compatible
 from .conf import settings
 from cmsplugin_filer_utils import FilerPluginManager
 
 
-@python_2_unicode_compatible
 class FilerTeaser(CMSPlugin):
     """
     A Teaser
@@ -22,15 +20,29 @@ class FilerTeaser(CMSPlugin):
         verbose_name=_("image"),
         on_delete=models.SET_NULL,
     )
-    image_url = models.URLField(_("alternative image url"), null=True, blank=True, default=None)
-    style = models.CharField(
-        _('Style'), choices=STYLE_CHOICES, default=DEFAULT_STYLE, max_length=255, blank=True)
-    use_autoscale = models.BooleanField(_("use automatic scaling"), default=True,
-                                        help_text=_('tries to auto scale the image based on the placeholder context'))
+    image_url = models.URLField(_("alternative image url"),
+                                null=True,
+                                blank=True,
+                                default=None)
+    style = models.CharField(_('Style'),
+                             choices=STYLE_CHOICES,
+                             default=DEFAULT_STYLE,
+                             max_length=255,
+                             blank=True)
+    use_autoscale = models.BooleanField(
+        _("use automatic scaling"),
+        default=True,
+        help_text=_(
+            'tries to auto scale the image based on the placeholder context'))
     width = models.PositiveIntegerField(_("width"), null=True, blank=True)
     height = models.PositiveIntegerField(_("height"), null=True, blank=True)
 
-    free_link = models.CharField(_("link"), max_length=255, blank=True, null=True, help_text=_("if present image will be clickable"))
+    free_link = models.CharField(
+        _("link"),
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text=_("if present image will be clickable"))
     page_link = PageField(
         null=True,
         blank=True,
@@ -40,7 +52,8 @@ class FilerTeaser(CMSPlugin):
     )
     description = models.TextField(_("description"), blank=True, null=True)
 
-    target_blank = models.BooleanField(_("open link in new window"), default=False)
+    target_blank = models.BooleanField(_("open link in new window"),
+                                       default=False)
 
     cmsplugin_ptr = models.OneToOneField(
         to=CMSPlugin,
@@ -54,7 +67,8 @@ class FilerTeaser(CMSPlugin):
         from django.core.exceptions import ValidationError
         # Make sure that either image or image_url is set
         if self.image and self.image_url:
-            raise ValidationError(_('Either an image or an image url must be selected.'))
+            raise ValidationError(
+                _('Either an image or an image url must be selected.'))
 
     def __str__(self):
         return self.title
